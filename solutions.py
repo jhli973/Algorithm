@@ -143,8 +143,8 @@ def union(parent, rank, x, y):
     elif rank[xroot] > rank[yroot]:
         parent[yroot] = xroot
         
-    #If ranks are same, then make one as root and increment
-    #its rank by one
+    # If ranks are same, then make one as root and increment
+    # its rank by one
     else :
         parent[yroot] = xroot
         rank[xroot] += 1
@@ -154,8 +154,8 @@ def question3(G):
     dct = {}
     rank = {}
     parent = {}
+    cnt = 0
     
-    # This step time complexity is O(V*E)
     for k in sorted(G.keys()):
         parent[k] = k
         rank[k] = 0
@@ -163,23 +163,25 @@ def question3(G):
         for tp in G[k]:
             t = tp[0]
             w = tp[1]
-            
-            # remove duplicate vertices edge pair because it is undirected graph
             if (t, k) in dct.keys():
-                pass
+                break                
             else:
-                dct[(k , t)] = w
-    # This step time complexity is O(E)
+                # handle None and Empty str value
+                if w == None or w == '':
+                    cnt += 1
+                    break
+                else:
+                    dct[(k, t)] = w
+
     edges = []
-    for k, w in dct.items():
+    for k, w in sorted(dct.items(), key=lambda x: (x[1], x[0])):
         edges.append((k[0], k[1], w))
         
     i = 0
     e = 0 
 
     mini_spanning_tree = {}
-    # This step time complexity is O(V)
-    while e < len(parent) -1:
+    while e < len(parent) -1 -cnt:
         
         u , v, w = edges[i]
         i += 1
@@ -189,31 +191,35 @@ def question3(G):
         
         if x != y:
             e += 1
-            
             if u in mini_spanning_tree:
                 mini_spanning_tree[u].append((v,w))
             else:
                 mini_spanning_tree[u] = [(v, w)]
-            
-            #mini_spanning_tree.append((u, v, w))
+
             union(parent, rank, x, y)
             
     return mini_spanning_tree
     
 # test case 1
-# return: {'A': [('B', 2)], 'B': [('C', 5)]}
+# return {'A': [('B', 2)], 'B': [('C', 5)]}
 G ={'A': [('B', 2)], 'B': [('A', 2), ('C', 5)], 'C': [('B', 5)]}
-question3(G)     
+question3(G) 
 
 # test case 2
-# return: {'A': [('B', 10), ('C', 6), ('D', 5)], 'B': [('E', 15)]}
+# return {'A': [('D', 5), ('B', 10)], 'D': [('C', 4)], 'E': [('B', 15)]}
 G ={'A': [('B', 10), ('C', 6), ('D', 5)], 'B': [('A', 10),('E', 15)], 'C': [('A',6),('D', 4)],'D': [('C', 4)], 'E':[('B',15)]}
 question3(G) 
 
 # test case 3
-# return: {'A': [('B', 10), ('C', 6), ('D', 5)], 'D': [('E', 10)]}
+# return {'A': [('D', 5), ('C', 6), ('B', 10)], 'D': [('E', 15)]}
 G ={'A': [('B', 10), ('C', 6), ('D', 5)], 'B': [('A', 10)], 'C': [('A', 6)], 'D':[('A', 5),('E', 10)], 'E':[('D', 10)]}
-question3(G)   
+question3(G)  
+
+# test case 4
+# return {'A': [('D', 5), ('C', 6), ('B', 10)]}
+G ={'A': [('B', 10), ('C', 6), ('D', 5)], 'B': [('A', 10)], 'C': [('A', 6)], 'D':[('A', 5),('E', None)], 'E':[('D', None)]}
+question3(G)
+     
 """
 ### Question 4
 Find the least common ancestor between two nodes on a [binary search tree]. The least common ancestor is the farthest node from the root that 
