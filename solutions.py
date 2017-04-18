@@ -5,19 +5,35 @@ Question 1
 Given two strings s and t, determine whether some anagram of t is a substring of s. For example: if s = "udacity" and t = "ad", then the function returns True. Your function definition should look like: question1(s, t) and return a boolean True or False.
 """
 
+# define a helper function to build a dictionary
+
+def build_dict(string):
+    
+    char_dict = {}
+    
+    for char in string:
+        if char in char_dict:
+            char_dict[char] += 1
+        else:
+            char_dict[char] = 1
+            
+    return char_dict
+
 def question1(s, t):
     
-    # set to collect all unique letters 
-    letters = set(list(t))
+    t_len = len(t)
+    s_len = len(s)
+    
+    for i in range(s_len - t_len + 1):
+        # compare the dictionary
+        if build_dict(s[i:i+t_len]) == build_dict(t) :
             
-    # if all elements exist in s, return True,  otherwise return false        
-    for k in letters:
-        if k not in s:
-            return False
-    return True
+            return True
+        
+    return False
 
 # test case 1:  
-# should return True  
+# should return False 
 question1('scilent', 'listen') 
 
 # test case 2:  
@@ -25,29 +41,67 @@ question1('scilent', 'listen')
 question1('udacity', 'ad')   
 
 # test case 3:  
-# should return False
-question1('ad','Udacity')
+# should return True
+question1('astronomer', 'moon')
 
 """
 Question 2
 Given a string a, find the longest palindromic substring contained in a. Your function definition should look like question2(a), and return a string.
 """
+# Manacher's algorithm
+
 def question2(a):
     
-    n = len(a)
-    if n < 2:
-        return None
+    N = len(a)
+    if N == 0:
+        return
     
-    # reverse string a
-    a_ = a[::-1]
-    longest_palindromic = None
-    length = 1
-    for i in range(1, n):
-        for j in range(i + 1, n+1) :
-            if a[i:j] == a_[n-j:n-i] and len(a[i:j].strip(' ')) > length:
-                length = len(a[i:j])
-                longest_palindromic= a[i:j]
-    return longest_palindromic
+    ps = ['#']
+    for s in list(a):
+        ps.append(s)
+        ps.append('#')
+    
+    N = len(ps)
+    L = [0] * N
+    
+    C = 0     # center position
+    R = 0     # center right position
+
+    mirror = 0     # current left position
+    maxLPSLength = 0
+    maxLPSCenterPosition = 0
+
+  
+    for i in range(N):
+      
+        # get current left position mirror for current right position i
+        mirror = 2*C-i
+
+        # If current right position i is within center right position R
+        if i < R:
+            L[i] = min(L[mirror], R - i)
+  
+        # Attempt to expand palindrome at the center i
+        # we compare characters and if match then increment LPS Length by ONE
+
+        while ((i + 1 + L[i]) < N and ps[ i + (1 + L[i])] == ps[i - (1 + L[i])]):
+                L[i]+=1
+        
+        if L[i] > maxLPSLength:        # Track maxLPSLength
+            maxLPSLength = L[i]
+            maxLPSCenterPosition = i
+  
+        # If palindrome centered at current right position i
+        # expand beyond center right position R,
+        # adjust center position C based on expanded palindrome.
+        if i + L[i] > R:
+            C = i
+            R = i + L[i]
+  
+    # return LPS 
+    start = int((maxLPSCenterPosition - maxLPSLength) / 2)
+    end = int(start + maxLPSLength)
+    return a[start:end]
     
 # test case 1:  
 # should return 'abccba'
@@ -100,7 +154,8 @@ def question3(G):
     dct = {}
     rank = {}
     parent = {}
-
+    
+    # This step time complexity is O(V*E)
     for k in sorted(G.keys()):
         parent[k] = k
         rank[k] = 0
@@ -108,11 +163,13 @@ def question3(G):
         for tp in G[k]:
             t = tp[0]
             w = tp[1]
+            
+            # remove duplicate vertices edge pair because it is undirected graph
             if (t, k) in dct.keys():
                 pass
             else:
                 dct[(k , t)] = w
-    
+    # This step time complexity is O(E)
     edges = []
     for k, w in dct.items():
         edges.append((k[0], k[1], w))
@@ -121,6 +178,7 @@ def question3(G):
     e = 0 
 
     mini_spanning_tree = {}
+    # This step time complexity is O(V)
     while e < len(parent) -1:
         
         u , v, w = edges[i]

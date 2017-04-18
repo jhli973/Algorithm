@@ -1,20 +1,24 @@
 Question 1:
 
-1. I first get the unique letter from string t using list and set functions, 
-2. then check if all the element in set letters exist in s, then return True, otherwise return false. 
+1. define a helper function build_dict 
+2. loop through string s and get substring with same length as string t
+3. Compare the dictionary, if any of them returns ture then return true
+4. If no same dictionary exist, return false 
 
-time complexity: O(1) + O(26) = O(1) , suppose each string is consists of 26 letters
-space complexity: O(26) + O(1) = O(1)
+time complexity: O(len(s)) 
+space complexity: O(1)
 
 
 Question 2:
 
-1. To have palindromic substring, the length of string must have more than 2
-2. Then I reverse the string
-3. Slice and compare the substring from the original and reversed string
-4. Keep and return the longest string
+1. If the length of string is zero, return None
+2. Insert '#' sign into the string
+3. Loop through the current right position i
+4. If the left and right strings are same, update the length value L[i] at that position
+5. Update the maxLPSLength and maxLPSCenterPosition when L[i] value greater than maxLPSLength
+6. Return the longest string
 
-time complexity: O(n^2)
+time complexity: O(n)
 space complexity: O(1)
 
 Question 3:
@@ -26,8 +30,10 @@ Question 3:
 5. Get unique edge between vertices 
 6. Loop through all edges and compare the parent vertices, if there are different then add the adjacent list into the mini_spaning_tree
 
-time complexity: O(V*E +V)
-space complexity: O(5 * V) = O(V)
+time complexity: O(V*E + V + E)
+space complexity: O(5) = O(1)
+NOTE:I have used Kruskals algorithm, can you point out if anything was wrong? 
+       I don't understand how time complexity is O(ElogE)?
 
 Question 4:
 
