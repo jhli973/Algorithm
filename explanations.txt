@@ -3,7 +3,7 @@ Question 1:
 1. I first get the unique letter from string t using list and set functions, 
 2. then check if all the element in set letters exist in s, then return True, otherwise return false. 
 
-time complexity: O(1) + O(26) = O(1) , suppoer each string is consists of 26 letters
+time complexity: O(1) + O(26) = O(1) , suppose each string is consists of 26 letters
 space complexity: O(26) + O(1) = O(1)
 
 
@@ -15,7 +15,7 @@ Question 2:
 4. Keep and return the longest string
 
 time complexity: O(n^2)
-space complexity: O(n)
+space complexity: O(1)
 
 Question 3:
 
@@ -36,8 +36,8 @@ Question 4:
 3. Loop through the list and pick the first element   
 4. If no common element return None  
 
-time complexity: O(2 * E * V) = O(E *V)
-space complexity: O(2 * E) = O(E *V)
+time complexity: O(2 * n) = O(n)
+space complexity: O(1) 
 
 
 Question 5:
@@ -47,5 +47,5 @@ Question 5:
 3. Make sure the m less than or equal to the length of the list
 4. Pop out the last value of the list m times and catch the m th element value and return it       
 
-time complexity: O(V + m)
-space complexity: O(V)
+time complexity: O(n + m) = O(n)
+space complexity: O(1)
